@@ -1,6 +1,8 @@
 const router = require('express').Router(),
   settings = require('./src/util/settings');
 
+router.use('/list', require('./src/route/list'));
+
 module.exports = (username, password) => {
   if(!username) { throw new Error('greylog-stats expects your graylog username as first argument!'); }
   if(!password) { throw new Error('greylog-stats expects your graylog password as second argument!'); }
