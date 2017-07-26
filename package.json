@@ -1,0 +1,45 @@
+{
+  "name": "graylog-stats",
+  "version": "0.0.0",
+  "description": "gets stats from graylog api",
+  "main": "index.js",
+  "scripts": {
+    "precommit": "npm run lint",
+    "prepush": "npm test",
+    "lint": "npx eslint .",
+    "test": "jest",
+    "start": "npx nodemon app/main"
+  },
+  "repository": {
+    "type": "git",
+    "url": ".."
+  },
+  "author": "oliver.ross@hotmail.com",
+  "license": "SEE LICENCE IN LICENCE",
+  "dependencies": {
+    "express": "^4.15.3",
+    "request": "^2.81.0"
+  },
+  "devDependencies": {
+    "eslint": "^4.3.0",
+    "husky": "^0.14.3",
+    "jest": "^20.0.4",
+    "nodemon": "^1.11.0",
+    "supertest": "^3.0.0"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "index.js"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 0,
+        "functions": 0,
+        "lines": 0,
+        "statements": 0
+      }
+    }
+  }
+}
