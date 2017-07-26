@@ -1,6 +1,6 @@
 describe('index', () => {
   const express = require('express'),
-    settings = require('../src/settings');
+    settings = require('../src/util/settings');
 
   let target, result;
 
@@ -20,6 +20,21 @@ describe('index', () => {
 
   test('stores second constructor arg as password in settings', () => {
     expect(settings.set).toHaveBeenCalledWith('password', 'mockPassword');
+  });
+
+  describe('errors', () => {
+    test('throws if no username passed', () => {
+      expect(() => { target(); }).toThrowError('greylog-stats expects your graylog username as first argument!');
+    });
+    test('throws if username isnt a string', () => {
+      expect(() => { target(123, 'mockPassword'); }).toThrowError('username argument to greylog-stats should be a string!');
+    });
+    test('throws if no password passed', () => {
+      expect(() => { target('mockUsername'); }).toThrowError('greylog-stats expects your graylog password as second argument!');
+    });
+    test('throws if password isnt a string', () => {
+      expect(() => { target('mockUsername', 123); }).toThrowError('password argument to greylog-stats should be a string!');
+    });
   });
 
 });

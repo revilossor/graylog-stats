@@ -3,7 +3,7 @@ describe('settings', () => {
   let target;
 
   beforeAll(() => {
-    target = require('../src/settings');
+    target = require('../src/util/settings');
   });
 
   test('has get function', () => {
