@@ -26,7 +26,15 @@ module.exports = {
   dashboards: () => {
     return new Promise((resolve, reject) => {
       jsonRequest(`${getBasepath()}/api/dashboards`).then((result) => {
-        resolve(result);
+        resolve(result.dashboards.map((dashboard) => ({
+          description: dashboard.description,
+          id: dashboard.id,
+          title: dashboard.title,
+          widgets: dashboard.widgets.map((widget) => ({
+            description: widget.description,
+            id: widget.id
+          }))
+        })));
       }).catch(reject);
     });
   }

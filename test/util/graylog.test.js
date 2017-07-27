@@ -1,8 +1,20 @@
-let target, promise;
+let target, promise, result;
 
 let mockStatusCode = 200;
 let mockError = null;
-let mockBody = 'mockBody';
+let mockBody = {
+  dashboards: [{
+    description: 'mockDescription',
+    id: 'mockId',
+    title: 'mockTitle',
+    widgets:[{
+      description: 'mockDescription',
+      id: 'mockId',
+      something: 'this should be removed!'
+    }],
+    something: 'this should be removed!'
+  }]
+};
 
 const mockRequest = jest.fn().mockImplementation((opts, cb) => {
   cb(mockError, { statusCode: mockStatusCode }, mockBody);
@@ -28,7 +40,10 @@ beforeAll(() => {
 
 describe('dashboards()', () => {
   beforeAll((done) => {
-    promise = target.dashboards().then(done);
+    promise = target.dashboards().then((res) => {
+      result = res;
+      done();
+    });
   });
 
   test('function exists', () => {
@@ -46,6 +61,18 @@ describe('dashboards()', () => {
       method: 'GET',
       json: true
     }), expect.anything(Function));
+  });
+
+  test('resolves with mutated data', () => {
+    expect(result).toEqual(expect.objectContaining([{
+      description: 'mockDescription',
+      id: 'mockId',
+      title: 'mockTitle',
+      widgets: expect.objectContaining([{
+        description: 'mockDescription',
+        id: 'mockId',
+      }])
+    }]));
   });
 
   describe('uses settings', () => {
@@ -72,7 +99,6 @@ describe('dashboards()', () => {
 
   });
 
-  // resolves with mutated data
   describe('errors', () => {
     test('rejects with error from request', (done) => {
       mockError = new Error('mockError!');
