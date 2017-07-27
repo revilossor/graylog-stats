@@ -1,5 +1,6 @@
 const data = {
-  url: 'localhost',
+  protocol: 'http',
+  host: 'localhost',
   port: 9000
 };
 

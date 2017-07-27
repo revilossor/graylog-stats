@@ -64,7 +64,8 @@ describe('assign', () => {
 describe('defaults', () => {
 
   const defaultAssertions = {
-    url: 'localhost',
+    protocol: 'http',
+    host: 'localhost',
     port: 9000
   };
 

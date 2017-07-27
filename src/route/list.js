@@ -1,6 +1,8 @@
-const router = require('express').Router();
+const router = require('express').Router(),
+  graylog = require('../util/graylog');
 
 router.route('/').get((req, res) => {
+  graylog.dashboards();
   res.send('list all dashboards');      // TODO test this (supertest)!
 });
 
