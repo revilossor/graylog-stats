@@ -2,8 +2,11 @@ const router = require('express').Router(),
   graylog = require('../util/graylog');
 
 router.route('/').get((req, res) => {
-  graylog.dashboards();
-  res.send('list all dashboards');      // TODO test this (supertest)!
+  graylog.dashboards().then((result) => {
+    res.json(result);
+  }).catch((err) => {
+    res.status(500).send(err);
+  });
 });
 
 router.route('/:identifier').get((req, res) => {
