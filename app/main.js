@@ -5,4 +5,4 @@ app.use('/', require('../index')({
   password: 'password'
 }));
 
-app.listen('8080');
+app.listen('3000');
