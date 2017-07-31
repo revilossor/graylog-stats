@@ -28,12 +28,18 @@ const mockSettings = {
   port: 'mockPort'
 };
 
+let mockCachedData = null;
+
 beforeAll(() => {
   jest.mock('request', () => mockRequest);
   jest.mock('../../src/util/settings', () => ({
     set: () => {},
     assign: () => {},
     get: key => mockSettings[key]
+  }));
+  jest.mock('../../src/util/cache', () => () => ({
+    get: () => mockCachedData,
+    set: (key, value) => value
   }));
   target = require('../../src/util/graylog');
 });
@@ -63,16 +69,27 @@ describe('dashboards()', () => {
     }), expect.anything(Function));
   });
 
-  test('resolves with mutated data', () => {
-    expect(result).toEqual(expect.objectContaining([{
-      description: 'mockDescription',
-      id: 'mockId',
-      title: 'mockTitle',
-      widgets: expect.objectContaining([{
+  describe('resolves', () => {
+    test('with mutated data if nothing in cache', (done) => {
+      expect(result).toEqual(expect.objectContaining([{
         description: 'mockDescription',
         id: 'mockId',
-      }])
-    }]));
+        title: 'mockTitle',
+        widgets: expect.objectContaining([{
+          description: 'mockDescription',
+          id: 'mockId',
+        }])
+      }]));
+      done();
+    });
+    test('with cached data if something in cache', (done) => {
+      mockCachedData = 'someCachedData';
+      target.dashboards().then((res) => {
+        expect(res).toBe(mockCachedData);
+        mockCachedData = null;
+        done();
+      });
+    });
   });
 
   describe('uses settings', () => {

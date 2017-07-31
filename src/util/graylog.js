@@ -1,5 +1,6 @@
 const settings = require('./settings'),
-  request = require('request');
+  request = require('request'),
+  dashboardCache = require('./cache')(3600000); // caches calls for dashboard stuff for an hour
 
 const getBasepath = () => {
   const username = settings.get('username'),
@@ -24,18 +25,25 @@ const jsonRequest = (uri) => {
 
 module.exports = {
   dashboards: () => {
+    const uri = `${getBasepath()}/api/dashboards`;
+    const cached = dashboardCache.get(uri);
     return new Promise((resolve, reject) => {
-      jsonRequest(`${getBasepath()}/api/dashboards`).then((result) => {
-        resolve(result.dashboards.map((dashboard) => ({
-          description: dashboard.description,
-          id: dashboard.id,
-          title: dashboard.title,
-          widgets: dashboard.widgets.map((widget) => ({
-            description: widget.description,
-            id: widget.id
-          }))
-        })));
-      }).catch(reject);
+      if(cached) {
+        resolve(cached);
+      } else {
+        jsonRequest(`${getBasepath()}/api/dashboards`).then((result) => {
+          const datum = result.dashboards.map((dashboard) => ({
+            description: dashboard.description,
+            id: dashboard.id,
+            title: dashboard.title,
+            widgets: dashboard.widgets.map((widget) => ({
+              description: widget.description,
+              id: widget.id
+            }))
+          }));
+          resolve(dashboardCache.set(uri, datum));
+        }).catch(reject);
+      }
     });
   }
 };

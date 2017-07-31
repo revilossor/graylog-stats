@@ -1,4 +1,4 @@
-let target, instance;
+let target, instance, value;
 
 beforeAll(() => {
   target = require('../../src/util/cache');
@@ -28,7 +28,7 @@ describe('instance', () => {
 describe('set', () => {
 
   beforeAll(() => {
-    instance.set('mock', 'someItem');
+    value = instance.set('mock', 'someItem');
   });
 
   test('stores an item which can be retrieved with get', () => {
@@ -38,6 +38,10 @@ describe('set', () => {
   test('overwrites an item with the same key', () => {
     instance.set('mock', 'somethingElse');
     expect(instance.get('mock')).toBe('somethingElse');
+  });
+
+  test('return the item', () => {
+    expect(value).toEqual('someItem');
   });
 
 });
