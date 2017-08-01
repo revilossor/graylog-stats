@@ -3,7 +3,6 @@ const express = require('express'),
 
 let target, app;
 
-
 let mockDashboardRejects = false;
 const mockError = new Error('mockError!');
 let mockDashboardResult = { value: 'mockDashboardResult' };
@@ -58,5 +57,33 @@ describe('"/" route', () => {
 describe('"/[identifier]" route', () => {
   test('is defined', () => {
     expect(express.Router.route).toHaveBeenCalledWith('/:identifier');
+  });
+  test('calls graylog::dashboards', (done) => {
+    request(app).get('/blah').then(() => {
+      expect(mockDashboards).toHaveBeenCalled();
+      done();
+    });
+  });
+  test('responds with correct dashboard when id in url', (done) => {
+    mockDashboardResult = [{ id: 'mockDashboardId' }, { id: 'somethingElse'} ];
+    request(app).get('/mockDashboardId').then((response) => {
+      expect(response.body).toEqual(expect.arrayContaining([{ id: 'mockDashboardId' }]));
+      done();
+    });
+  });
+  test('responds with correct dashboard when title in url', (done) => {
+    mockDashboardResult = [{ title: 'mockDashboardTitle' }, { title: 'somethingElse'} ];
+    request(app).get('/mockDashboardTitle').then((response) => {
+      expect(response.body).toEqual(expect.arrayContaining([{ title: 'mockDashboardTitle' }]));
+      done();
+    });
+  });
+  test('status 500 if graylog::dashboards rejects', (done) => {
+    mockDashboardRejects = true;
+    request(app).get('/blah').then((response) => {
+      expect(response.status).toBe(500);
+      mockDashboardRejects = false;
+      done();
+    });
   });
 });

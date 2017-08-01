@@ -18,6 +18,7 @@
   "license": "SEE LICENCE IN LICENCE",
   "dependencies": {
     "express": "^4.15.3",
+    "object-finder": "0.0.2",
     "request": "^2.81.0"
   },
   "devDependencies": {

@@ -1,5 +1,6 @@
 const router = require('express').Router(),
-  graylog = require('../util/graylog');
+  graylog = require('../util/graylog'),
+  find = require('object-finder');
 
 router.route('/').get((req, res) => {
   graylog.dashboards().then((result) => {
@@ -9,8 +10,16 @@ router.route('/').get((req, res) => {
   });
 });
 
-router.route('/:identifier').get((req, res) => {
-  res.send('list all widgets in dashboard with id ' + req.params.identifier);
+router.route('/:identifier').get((req, res) => {    // identifier can be id or title
+  graylog.dashboards().then((result) => {
+    let found = find({ id: req.params.identifier }, result);
+    if(found.length === 0) {
+      found = find({ title: req.params.identifier }, result);
+    }
+    res.json(found);
+  }).catch((err) => {
+    res.status(500).send(err);
+  });
 });
 
 module.exports = router;
