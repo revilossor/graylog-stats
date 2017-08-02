@@ -15,7 +15,8 @@ module.exports = (dashboard, widget) => {
       if(widget && foundDashboard) { foundWidget = get(foundDashboard.widgets, widget); }
       resolve({
         dashboard: (foundDashboard) ? foundDashboard.id : null,
-        widget: (foundWidget) ? foundWidget.id : null
+        widget: (foundWidget) ? foundWidget.id : null,
+        data: foundDashboard
       });
     }).catch(reject);
   });
