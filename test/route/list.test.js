@@ -5,7 +5,7 @@ let target, app;
 
 let mockDashboardRejects = false;
 const mockError = new Error('mockError!');
-let mockDashboardResult = { value: 'mockDashboardResult' };
+let mockDashboardResult = { id: 'mockDashboardResult' };
 const mockDashboards = jest.fn().mockImplementation(() => new Promise((resolve, reject) => {
   (mockDashboardRejects) ? reject(mockError) : resolve(mockDashboardResult);
 }));
@@ -67,14 +67,14 @@ describe('"/[identifier]" route', () => {
   test('responds with correct dashboard when id in url', (done) => {
     mockDashboardResult = [{ id: 'mockDashboardId' }, { id: 'somethingElse'} ];
     request(app).get('/mockDashboardId').then((response) => {
-      expect(response.body).toEqual(expect.arrayContaining([{ id: 'mockDashboardId' }]));
+      expect(response.body).toEqual(expect.objectContaining({ id: 'mockDashboardId' }));
       done();
     });
   });
   test('responds with correct dashboard when title in url', (done) => {
-    mockDashboardResult = [{ title: 'mockDashboardTitle' }, { title: 'somethingElse'} ];
+    mockDashboardResult = [{ id: 'mockDashboardId', title: 'mockDashboardTitle' }, { id: 'somethingElseId', title: 'somethingElse'} ];
     request(app).get('/mockDashboardTitle').then((response) => {
-      expect(response.body).toEqual(expect.arrayContaining([{ title: 'mockDashboardTitle' }]));
+      expect(response.body).toEqual(expect.objectContaining({ title: 'mockDashboardTitle' }));
       done();
     });
   });
@@ -83,6 +83,12 @@ describe('"/[identifier]" route', () => {
     request(app).get('/blah').then((response) => {
       expect(response.status).toBe(500);
       mockDashboardRejects = false;
+      done();
+    });
+  });
+  test('status 404 if no dashboard identified', (done) => {
+    request(app).get('/blah').then((response) => {
+      expect(response.status).toBe(404);
       done();
     });
   });
