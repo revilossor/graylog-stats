@@ -123,8 +123,17 @@ describe('returns ids when passed id or title', () => {
 });
 
 test('returns the found dashboard data', (done) => {
-  target('mockDashboardTitle_1').then((res) => {
-    expect(res).toEqual(expect.objectContaining({ data: expect.objectContaining( { title: 'mockDashboardTitle_1' } ) }));
+  target('mockDashboardTitle_1', 'mockDashboardWidgetTitle_1_1').then((res) => {
+    expect(res).toEqual(expect.objectContaining({
+      data: expect.objectContaining({
+        dashboard: expect.objectContaining({
+          title: 'mockDashboardTitle_1'
+        }),
+        widget: expect.objectContaining({
+          title: 'mockDashboardWidgetTitle_1_1'
+        })
+      })
+    }));
     done();
   });
 });

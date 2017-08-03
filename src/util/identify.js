@@ -16,7 +16,10 @@ module.exports = (dashboard, widget) => {
       resolve({
         dashboard: (foundDashboard) ? foundDashboard.id : null,
         widget: (foundWidget) ? foundWidget.id : null,
-        data: foundDashboard
+        data: {
+          dashboard: (foundDashboard) ? foundDashboard : null,
+          widget: (foundWidget) ? foundWidget : null
+        }
       });
     }).catch(reject);
   });
