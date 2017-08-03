@@ -35,7 +35,7 @@ const mockIdentity = {
   data: {
     dashboard: 'mockDashbaordData',
     widget: {
-      description: 'mockWidgetDescription',
+      title: 'mockWidgetTitle',
       id: 'mockWidgetId',
       type: 'mockWidgetType',
       something: 'this should be removed!'
@@ -180,7 +180,7 @@ describe('widgets()', () => {
 
   test('resolves with mutated pertinent data', () => {
     expect(result).toEqual(expect.objectContaining({
-      title: 'mockWidgetDescription',
+      title: 'mockWidgetTitle',
       id: 'mockWidgetId',
       type: 'mockWidgetType',
       values: 'mockWidgetValues'
