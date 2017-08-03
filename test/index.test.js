@@ -4,7 +4,8 @@ const express = require('express'),
 let target, result;
 
 const routeAssertions = [
-  { endpoint: '/list', mock: jest.fn(), path: '../src/route/list' }
+  { endpoint: '/list', mock: jest.fn(), path: '../src/route/list' },
+  { endpoint: '/widget', mock: jest.fn(), path: '../src/route/widget' }
 ];
 
 const mockSettings = {

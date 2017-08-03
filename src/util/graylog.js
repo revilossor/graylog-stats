@@ -38,12 +38,26 @@ module.exports = {
             title: dashboard.title,
             widgets: dashboard.widgets.map((widget) => ({
               description: widget.description,
-              id: widget.id
+              id: widget.id,
+              title: widget.title,
+              type: widget.type
             }))
           }));
           resolve(dashboardCache.set(uri, datum));
         }).catch(reject);
       }
+    });
+  },
+  widgets: (id) => {  
+    return new Promise((resolve, reject) => {
+      jsonRequest(`${getBasepath()}/api/dashboards/${id.dashboard}/widgets/${id.widget}/value`).then((value) => {
+        resolve({
+          description: id.data.widget.description,
+          id: id.widget,
+          type: id.data.widget.type,
+          values: value.result
+        });
+      }).catch(reject);
     });
   }
 };

@@ -8,8 +8,10 @@ let mockBody = {
     id: 'mockId',
     title: 'mockTitle',
     widgets:[{
-      description: 'mockDescription',
-      id: 'mockId',
+      description: 'mockWidgetDescription',
+      id: 'mockWidgetId',
+      title: 'mockWidgetTitle',
+      type: 'mockWidgetType',
       something: 'this should be removed!'
     }],
     something: 'this should be removed!'
@@ -19,7 +21,6 @@ let mockBody = {
 const mockRequest = jest.fn().mockImplementation((opts, cb) => {
   cb(mockError, { statusCode: mockStatusCode }, mockBody);
 });
-
 const mockSettings = {
   username: 'mockUsername',
   password: 'mockPassword',
@@ -27,8 +28,22 @@ const mockSettings = {
   host: 'mockHost',
   port: 'mockPort'
 };
-
 let mockCachedData = null;
+
+const mockIdentity = {
+  dashboard: 'mockDashboardId',
+  widget: 'mockWidgetId',
+  data: {
+    dashboard: 'mockDashbaordData',
+    widget: {
+      description: 'mockWidgetDescription',
+      id: 'mockWidgetId',
+      title: 'mockWidgetTitle',
+      type: 'mockWidgetType',
+      something: 'this should be removed!'
+    }
+  }
+};
 
 beforeAll(() => {
   jest.mock('request', () => mockRequest);
@@ -76,8 +91,10 @@ describe('dashboards()', () => {
         id: 'mockId',
         title: 'mockTitle',
         widgets: expect.objectContaining([{
-          description: 'mockDescription',
-          id: 'mockId',
+          description: 'mockWidgetDescription',
+          id: 'mockWidgetId',
+          title: 'mockWidgetTitle',
+          type: 'mockWidgetType'
         }])
       }]));
       done();
@@ -134,5 +151,63 @@ describe('dashboards()', () => {
       });
     });
   });
+
+});
+
+describe('widgets()', () => {
+  beforeAll((done) => {
+    mockRequest.mockClear();
+    mockBody = { result: 'mockWidgetValues' };
+    promise = target.widgets(mockIdentity).then((res) => {
+      result = res;
+      done();
+    });
+  });
+
+  test('function exists', () => {
+    expect(target.widgets).toBeDefined();
+    expect(target.dashboards).toBeInstanceOf(Function);
+  });
+
+  test('returns a promise', () => {
+    expect(promise).toBeInstanceOf(Promise);
+  });
+
+  test('does GET request for json to /api/dashboards/{dashboardId}/widgets/{widgetId}/value', () => {
+    expect(mockRequest).toHaveBeenCalledWith(expect.objectContaining({
+      uri: expect.stringContaining(`/api/dashboards/${mockIdentity.dashboard}/widgets/${mockIdentity.widget}/value`),
+      method: 'GET',
+      json: true
+    }), expect.anything(Function));
+  });
+
+  test('resolves with mutated pertinent data', () => {
+    expect(result).toEqual(expect.objectContaining({
+      description: 'mockWidgetDescription',
+      id: 'mockWidgetId',
+      type: 'mockWidgetType',
+      values: 'mockWidgetValues'
+    }));
+  });
+
+  describe('errors', () => {
+    test('rejects with error from request', (done) => {
+      mockError = new Error('mockError!');
+      target.widgets(mockIdentity).catch((err) => {
+        expect(err).toBe(mockError);
+        mockError = null;
+        done();
+      });
+    });
+    test('rejects with custom error if request status non 200', (done) => {
+      mockStatusCode = 999;
+      target.widgets(mockIdentity).catch((err) => {
+        expect(err).toEqual(new Error(`request to mockProtocol://mockUsername:mockPassword@mockHost:mockPort/api/dashboards/${mockIdentity.dashboard}/widgets/${mockIdentity.widget}/value is 999`));
+        mockStatusCode = 200;
+        done();
+      });
+    });
+  });
+
 
 });
