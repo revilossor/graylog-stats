@@ -51,7 +51,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       jsonRequest(`${getBasepath()}/api/dashboards/${id.dashboard}/widgets/${id.widget}/value`).then((value) => {
         resolve({
-          title: id.data.widget.description,
+          title: id.data.widget.title,
           id: id.widget,
           type: id.data.widget.type,
           values: value.result
