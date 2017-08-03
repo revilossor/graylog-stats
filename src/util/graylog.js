@@ -37,9 +37,8 @@ module.exports = {
             id: dashboard.id,
             title: dashboard.title,
             widgets: dashboard.widgets.map((widget) => ({
-              description: widget.description,
+              title: widget.description,
               id: widget.id,
-              title: widget.title,
               type: widget.type
             }))
           }));
@@ -48,11 +47,11 @@ module.exports = {
       }
     });
   },
-  widgets: (id) => {  
+  widgets: (id) => {
     return new Promise((resolve, reject) => {
       jsonRequest(`${getBasepath()}/api/dashboards/${id.dashboard}/widgets/${id.widget}/value`).then((value) => {
         resolve({
-          description: id.data.widget.description,
+          title: id.data.widget.description,
           id: id.widget,
           type: id.data.widget.type,
           values: value.result

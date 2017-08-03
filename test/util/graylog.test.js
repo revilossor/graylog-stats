@@ -10,7 +10,6 @@ let mockBody = {
     widgets:[{
       description: 'mockWidgetDescription',
       id: 'mockWidgetId',
-      title: 'mockWidgetTitle',
       type: 'mockWidgetType',
       something: 'this should be removed!'
     }],
@@ -38,7 +37,6 @@ const mockIdentity = {
     widget: {
       description: 'mockWidgetDescription',
       id: 'mockWidgetId',
-      title: 'mockWidgetTitle',
       type: 'mockWidgetType',
       something: 'this should be removed!'
     }
@@ -91,9 +89,8 @@ describe('dashboards()', () => {
         id: 'mockId',
         title: 'mockTitle',
         widgets: expect.objectContaining([{
-          description: 'mockWidgetDescription',
+          title: 'mockWidgetDescription',
           id: 'mockWidgetId',
-          title: 'mockWidgetTitle',
           type: 'mockWidgetType'
         }])
       }]));
@@ -183,7 +180,7 @@ describe('widgets()', () => {
 
   test('resolves with mutated pertinent data', () => {
     expect(result).toEqual(expect.objectContaining({
-      description: 'mockWidgetDescription',
+      title: 'mockWidgetDescription',
       id: 'mockWidgetId',
       type: 'mockWidgetType',
       values: 'mockWidgetValues'
