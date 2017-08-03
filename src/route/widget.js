@@ -5,7 +5,7 @@ const router = require('express').Router(),
 router.route('/:dashboardIdentifier').get((req, res) => {
   identify(req.params.dashboardIdentifier).then((id) => {
     if(!id.dashboard) { return res.status(404).send(`no dashboard with identifier "${req.params.dashboardIdentifier}"`); }
-    Promise.all(id.data.dashboard.widgets.map((widget) => graylog.widgets({
+    Promise.all(id.data.dashboard.widgets.map(widget => graylog.widgets({
       dashboard: id.dashboard,
       widget: widget.id,
       data: {
