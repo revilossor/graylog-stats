@@ -48,6 +48,7 @@ module.exports = {
     });
   },
   widgets: (id) => {
+    // TODO cache these calls for like a min or something??
     return new Promise((resolve, reject) => {
       jsonRequest(`${getBasepath()}/api/dashboards/${id.dashboard}/widgets/${id.widget}/value`).then((value) => {
         resolve({
